@@ -1,2 +1,49 @@
 google-adk
 google-genai
+# Core ADK
+google-adk>=0.3.0
+google-generativeai>=0.7.0
+
+# Vector store
+faiss-cpu>=1.8.0
+# pinecone-client>=3.0.0     # uncomment when switching to Pinecone
+
+# Embeddings
+vertexai>=1.49.0             # for Vertex AI text embedding
+# openai>=1.0.0              # uncomment if using OpenAI embeddings
+
+# Graph store
+neo4j>=5.0.0
+
+# NLP / entity extraction
+spacy>=3.7.0
+# python -m spacy download en_core_web_sm   ← run after install
+
+# Re-ranking (optional but recommended)
+sentence-transformers>=3.0.0
+
+# Ingestion
+langchain>=0.2.0
+langchain-community>=0.2.0
+pypdf>=4.0.0
+python-docx>=1.1.0
+beautifulsoup4>=4.12.0
+
+# API
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+
+# UI
+streamlit>=1.35.0
+pyvis>=0.3.2
+
+# Eval
+ragas>=0.1.9
+
+# Config
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# Dev
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
