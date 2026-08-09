@@ -46,7 +46,7 @@ Confidence: <high | medium | low>
 
 graph_rag_agent = Agent(
     name="graph_rag_agent",
-    model=os.environ.get("AGENT_MODEL", "gemini-1.5-flash"),
+    model=os.environ.get("AGENT_MODEL", "gemini-2.5-flash"),
     description=(
         "Traverses the Neo4j knowledge graph to answer relational and multi-hop queries. "
         "Best for: how X connects to Y, dependency chains, entity ownership, "
