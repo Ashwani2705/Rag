@@ -26,7 +26,7 @@ Constraints to be aware of :
 from __future__ import annotations
 import hashlib
 from dataclasses import dataclass,field
-from typing import literal
+from typing import Literal
 
 from ingestion.loader import RawDocument
 

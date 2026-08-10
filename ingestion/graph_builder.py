@@ -178,8 +178,8 @@ class GraphBuilder:
         not for large batch ingestion.
         """
         import google.generativeai as genai
-        genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        genai.configure(api_key=os.environ["gemini_api_key"])
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
         prompt = f"""Extract entities and relationships from the following text.
 
