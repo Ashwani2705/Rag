@@ -59,7 +59,7 @@ class GoogleGenAIEmbedder(BaseEmbedder):
 
     def __init__(self):
         from google import genai
-        api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
+        api_key = os.environ.get("gemini_api_key") 
         if not api_key:
             raise ValueError("GOOGLE_API_KEY or GEMINI_API_KEY must be set in environment.")
         

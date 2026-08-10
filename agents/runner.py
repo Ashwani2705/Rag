@@ -260,6 +260,7 @@ class AgentRunner:
         if self._store_manager is None:
             return {"status": "not_initialised"}
         return self._store_manager.health().to_dict() if hasattr(self._store_manager.health(), "to_dict") else {}
+        return self._store_manager.health().to_dict()
 
 
 # ---------------------------------------------------------------------------
