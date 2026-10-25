@@ -174,7 +174,7 @@ class RagasEvaluator:
         scores, per_question = self._run_ragas(dataset)
 
         elapsed = round(time.time() - t0, 1)
-        print(f"[ragas_eval] ✓ done in {elapsed}s")
+        print(f"[ragas_eval] [OK] done in {elapsed}s")
 
         return EvalResult(
             mode=mode,

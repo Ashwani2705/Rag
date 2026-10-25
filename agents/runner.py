@@ -98,7 +98,7 @@ class AgentRunner:
             )
 
             self._ready = True
-            print("[runner] ✓ ready.")
+            print("[runner] [OK] ready.")
 
     # ── Main run interface ───────────────────────────────────────────────────
 

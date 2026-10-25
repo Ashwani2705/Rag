@@ -374,8 +374,7 @@ class Neo4jGraphStore:
                 ORDER BY score DESC
                 LIMIT $limit
                 """,
-                query=query,
-                limit=top_k,
+                {"query": query, "limit": top_k},
             )
             return [dict(r) for r in result]
 
@@ -409,6 +408,21 @@ class Neo4jGraphStore:
                 RETURN c.chunk_id AS chunk_id, c.text AS text, c.source AS source
                 """,
                 name=entity_name,
+            )
+            return [dict(r) for r in result]
+
+    def get_chunks_by_ids(self, chunk_ids: list[str]) -> list[dict]:
+        """Fetch chunks with exact text by their chunk_ids."""
+        if not chunk_ids:
+            return []
+        with self._driver.session() as s:
+            result = s.run(
+                """
+                MATCH (c:Chunk)
+                WHERE c.chunk_id IN $chunk_ids
+                RETURN c.chunk_id AS chunk_id, c.text AS text, c.source AS source
+                """,
+                {"chunk_ids": chunk_ids},
             )
             return [dict(r) for r in result]
 

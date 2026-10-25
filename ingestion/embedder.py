@@ -201,5 +201,5 @@ def embed_and_store_chunks(chunks) -> tuple[list, list[list[float]]]:
     store.add_documents(texts, metadatas, embeddings)
     store.persist()
 
-    print(f"  [embedder] ✓ {len(chunks)} chunks stored.")
+    print(f"  [embedder] [OK] {len(chunks)} chunks stored.")
     return chunks, embeddings

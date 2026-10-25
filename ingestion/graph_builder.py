@@ -104,7 +104,7 @@ class GraphBuilder:
             self._write_entities(entities_all)
             self._write_relations(relations_all)
 
-        print(f"  [graph_builder] ✓ graph build complete.")
+        print(f"  [graph_builder] [OK] graph build complete.")
         self._driver.close()
 
     def close(self) -> None:

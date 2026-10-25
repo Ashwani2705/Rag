@@ -169,6 +169,10 @@ def graph_search(query: str, max_hops: int = 2, top_k: int = 5) -> dict[str, Any
         }
         for r in raw
     ]
+    if not paths:
+        ft_results = gs.fulltext_entity_search(query, top_k=top_k)
+        return {"paths": ft_results, "entities_found": entities, "query": query, "fallback": "fulltext"}
+
     return {"paths": paths, "entities_found": entities, "query": query}
 
 

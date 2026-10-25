@@ -34,7 +34,7 @@ def run_health(show_stats: bool = False, smoke: bool = False) -> int:
     print(report.summary())
 
     if not report.all_ok:
-        print("\n✗ One or more stores are unhealthy. Check logs above.")
+        print("\n[X] One or more stores are unhealthy. Check logs above.")
         return 1
 
     # ── Stats ─────────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ def run_health(show_stats: bool = False, smoke: bool = False) -> int:
             for i, r in enumerate(results, 1):
                 print(f"  Result {i} (score={r['score']:.3f}): {r['text'][:120]}...")
         else:
-            print("  ⚠ No results. Have you run ingestion yet?")
+            print("  [!] No results. Have you run ingestion yet?")
 
         # 2. Graph search
         print("\n[2] Graph search — entity: 'API Gateway'")
@@ -73,7 +73,7 @@ def run_health(show_stats: bool = False, smoke: bool = False) -> int:
                 print(f"  Result {i}: {r.start_entity} →{r.relations}→ {r.end_entity}")
                 print(f"    chunk: {r.text[:120]}...")
         else:
-            print("  ⚠ No results. Run ingestion with --mode llm or --mode spacy first.")
+            print("  [!] No results. Run ingestion with --mode llm or --mode spacy first.")
 
         # 3. Neighbour check
         print("\n[3] Entity neighbours — 'Priya Sharma'")
@@ -82,9 +82,9 @@ def run_health(show_stats: bool = False, smoke: bool = False) -> int:
             for n in neighbours[:5]:
                 print(f"  {n['neighbour']} [{n['relation']}]")
         else:
-            print("  ⚠ Entity not found in graph.")
+            print("  [!] Entity not found in graph.")
 
-    print("\n✓ Health check complete.\n")
+    print("\n[OK] Health check complete.\n")
     return 0
 
 

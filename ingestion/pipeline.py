@@ -69,7 +69,7 @@ def run_ingestion(
     print(f"  → {len(docs)} document(s) loaded\n")
 
     if not docs:
-        print("  ⚠ No documents loaded. Check source path and file types.")
+        print("  [!] No documents loaded. Check source path and file types.")
         return {"doc_count": 0, "chunk_count": 0, "elapsed_seconds": 0}
 
     # ── Step 2: Chunk ───────────────────────────────────────────────────────
@@ -79,7 +79,7 @@ def run_ingestion(
     print(f"  → {len(chunks)} chunk(s) produced\n")
 
     if not chunks:
-        print("  ⚠ No chunks produced. Documents may be empty or below min size.")
+        print("  [!] No chunks produced. Documents may be empty or below min size.")
         return {"doc_count": len(docs), "chunk_count": 0, "elapsed_seconds": 0}
 
     # ── Step 3: Embed + store to vector store ───────────────────────────────
@@ -107,7 +107,7 @@ def run_ingestion(
     }
 
     print(f"\n{'='*55}")
-    print(f"  ✓ Ingestion complete in {elapsed}s")
+    print(f"  [OK] Ingestion complete in {elapsed}s")
     print(f"  docs    : {summary['doc_count']}")
     print(f"  chunks  : {summary['chunk_count']}")
     print(f"  entities: {summary['entity_count']}")
