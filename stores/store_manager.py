@@ -43,7 +43,7 @@ class HealthReport:
         lines = ["=== Store Health ==="]
         lines.append(f"Vector store : {self.vector_store}")
         lines.append(f"Graph store  : {self.graph_store}")
-        lines.append(f"Overall      : {'✓ HEALTHY' if self.all_ok else '✗ DEGRADED'}")
+        lines.append(f"Overall      : {'[OK] HEALTHY' if self.all_ok else '[X] DEGRADED'}")
         return "\n".join(lines)
 
 
@@ -97,7 +97,7 @@ class StoreManager:
             print(f"  [store_manager] WARNING: graph schema init failed: {e}")
 
         self._initialised = True
-        print("[store_manager] ✓ both stores ready.")
+        print("[store_manager] [OK] both stores ready.")
 
     # ── Health ──────────────────────────────────────────────────────────────
 
@@ -135,7 +135,7 @@ class StoreManager:
         if not confirm:
             raise ValueError("Pass confirm=True to wipe all stores.")
 
-        print("[store_manager] ⚠ Wiping all stores...")
+        print("[store_manager] [!] Wiping all stores...")
 
         # Vector store — re-initialise in-memory (FAISS) or delete namespace (Pinecone)
         from stores.vector_store import get_vector_store, FAISSVectorStore, PineconeVectorStore
@@ -157,7 +157,7 @@ class StoreManager:
 
         # Graph store
         self.graph.wipe(confirm=True)
-        print("[store_manager] ✓ all stores wiped.")
+        print("[store_manager] [OK] all stores wiped.")
 
     def wipe_vector_only(self, confirm: bool = False) -> None:
         """Wipe only the vector store (keep graph intact)."""
@@ -180,6 +180,24 @@ class StoreManager:
         self.graph.wipe(confirm=True)
 
     # ── Stats ────────────────────────────────────────────────────────────────
+
+    def get_chunks_by_ids(self, chunk_ids: list[str]) -> list[dict]:
+        """
+        Lookup chunk text by chunk_ids from vector store and/or Neo4j graph store.
+        Returns a list of dicts: [{"chunk_id": str, "text": str, "source": str}]
+        """
+        if not chunk_ids:
+            return []
+        found: list[dict] = []
+        if hasattr(self.vector, "get_chunks_by_ids"):
+            found.extend(self.vector.get_chunks_by_ids(chunk_ids))
+        
+        found_ids = {c["chunk_id"] for c in found}
+        missing = [cid for cid in chunk_ids if cid not in found_ids]
+        if missing and hasattr(self.graph, "get_chunks_by_ids"):
+            found.extend(self.graph.get_chunks_by_ids(missing))
+        
+        return found
 
     def stats(self) -> dict:
         """Return combined stats from both stores."""

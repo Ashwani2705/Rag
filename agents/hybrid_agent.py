@@ -43,7 +43,7 @@ Confidence: <high | medium | low>
 
 hybrid_agent = Agent(
     name="hybrid_agent",
-    model=os.environ.get("AGENT_MODEL", "gemini-1.5-flash"),
+    model=os.environ.get("AGENT_MODEL", "gemini-2.5-flash"),
     description=(
         "Combines vector similarity search and graph traversal with RRF fusion. "
         "Best for broad, ambiguous, or comparative queries that benefit from "

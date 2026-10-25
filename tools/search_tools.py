@@ -23,15 +23,51 @@ from google.adk.tools import FunctionTool
 # Shared helpers (lazy imports so tools don't break if a dep is missing)
 # ---------------------------------------------------------------------------
 
+# def _get_embedding(text: str) -> list[float]:
+#     """Embed a query string using the configured model."""
+#     backend = os.environ.get("EMBEDDING_BACKEND", "vertex").lower()
+#     if backend == "vertex":
+#         from vertexai.language_models import TextEmbeddingModel
+#         model = TextEmbeddingModel.from_pretrained(
+#             os.environ.get("VERTEX_EMBEDDING_MODEL", "textembedding-gecko@003")
+#         )
+#         return model.get_embeddings([text])[0].values
+#     elif backend == "openai":
+#         from openai import OpenAI
+#         client = OpenAI()
+#         resp = client.embeddings.create(
+#             input=text,
+#             model=os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"),
+#         )
+#         return resp.data[0].embedding
+#     else:
+#         raise ValueError(f"Unknown EMBEDDING_BACKEND='{backend}'")
 def _get_embedding(text: str) -> list[float]:
     """Embed a query string using the configured model."""
-    backend = os.environ.get("EMBEDDING_BACKEND", "vertex").lower()
-    if backend == "vertex":
-        from vertexai.language_models import TextEmbeddingModel
-        model = TextEmbeddingModel.from_pretrained(
-            os.environ.get("VERTEX_EMBEDDING_MODEL", "textembedding-gecko@003")
+    backend = os.environ.get("EMBEDDING_BACKEND", "google").lower()
+
+    if backend in ["google", "gemini", "vertex"]:
+        import google.generativeai as genai
+
+        # Configures API key from environment variable
+        api_key = os.environ.get("gemini_api_key") 
+        if api_key:
+            genai.configure(api_key=api_key)
+
+        model_name = os.environ.get("GOOGLE_EMBEDDING_MODEL", "gemini-embedding-001")
+        result = genai.embed_content(
+            model=model_name,
+            content=text,
+            task_type="retrieval_query"
         )
-        return model.get_embeddings([text])[0].values
+        return result["embedding"]
+
+    elif backend == "sentence-transformers":
+        from sentence_transformers import SentenceTransformer
+        model_name = os.environ.get("ST_EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+        model = SentenceTransformer(model_name)
+        return model.encode(text).tolist()
+
     elif backend == "openai":
         from openai import OpenAI
         client = OpenAI()
@@ -40,8 +76,12 @@ def _get_embedding(text: str) -> list[float]:
             model=os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"),
         )
         return resp.data[0].embedding
+
     else:
-        raise ValueError(f"Unknown EMBEDDING_BACKEND='{backend}'")
+        raise ValueError(
+            f"Unknown EMBEDDING_BACKEND='{backend}'. "
+            f"Supported backends are: 'google', 'vertex', 'sentence-transformers', 'openai'."
+        )
 
 
 def _get_graph_store():
@@ -129,6 +169,10 @@ def graph_search(query: str, max_hops: int = 2, top_k: int = 5) -> dict[str, Any
         }
         for r in raw
     ]
+    if not paths:
+        ft_results = gs.fulltext_entity_search(query, top_k=top_k)
+        return {"paths": ft_results, "entities_found": entities, "query": query, "fallback": "fulltext"}
+
     return {"paths": paths, "entities_found": entities, "query": query}
 
 
@@ -145,8 +189,8 @@ def _extract_entities(text: str) -> list[str]:
     except Exception:
         # Gemini fallback
         import google.generativeai as genai
-        genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        genai.configure(api_key=os.environ["gemini_api_key"])
+        model = genai.GenerativeModel("gemini-2.5-flash")
         prompt = (
             f"Extract all named entities (people, organisations, products, places) "
             f"from the following text. Return only a comma-separated list, nothing else.\n\nText: {text}"

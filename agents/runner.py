@@ -98,7 +98,7 @@ class AgentRunner:
             )
 
             self._ready = True
-            print("[runner] ✓ ready.")
+            print("[runner] [OK] ready.")
 
     # ── Main run interface ───────────────────────────────────────────────────
 
@@ -164,7 +164,7 @@ class AgentRunner:
         context     = session_mgr.get_context_string(session_id, last_n=3)
         full_query  = self._build_query(query, context)
 
-        from google.adk.types import Content, Part
+        from google.genai.types import Content, Part
         message = Content(role="user", parts=[Part(text=full_query)])
 
         async for event in self._adk_runner.run_async(
@@ -190,7 +190,7 @@ class AgentRunner:
         Drive the ADK runner and collect the final response text.
         Returns (raw_text, route_decision).
         """
-        from google.adk.types import Content, Part
+        from google.genai.types import Content, Part
 
         message  = Content(role="user", parts=[Part(text=full_query)])
         raw_text = ""
@@ -260,6 +260,7 @@ class AgentRunner:
         if self._store_manager is None:
             return {"status": "not_initialised"}
         return self._store_manager.health().to_dict() if hasattr(self._store_manager.health(), "to_dict") else {}
+        return self._store_manager.health().to_dict()
 
 
 # ---------------------------------------------------------------------------

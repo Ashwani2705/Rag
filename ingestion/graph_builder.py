@@ -104,7 +104,7 @@ class GraphBuilder:
             self._write_entities(entities_all)
             self._write_relations(relations_all)
 
-        print(f"  [graph_builder] ✓ graph build complete.")
+        print(f"  [graph_builder] [OK] graph build complete.")
         self._driver.close()
 
     def close(self) -> None:
@@ -178,8 +178,8 @@ class GraphBuilder:
         not for large batch ingestion.
         """
         import google.generativeai as genai
-        genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        genai.configure(api_key=os.environ["gemini_api_key"])
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
         prompt = f"""Extract entities and relationships from the following text.
 

@@ -118,6 +118,21 @@ class FAISSVectorStore(BaseVectorStore):
         self._texts = data["texts"]
         self._metadatas = data["metadatas"]
 
+    def get_chunks_by_ids(self, chunk_ids: list[str]) -> list[dict]:
+        """Fetch chunks by their chunk_ids from stored metadata."""
+        id_set = set(chunk_ids)
+        results = []
+        for t, meta in zip(self._texts, self._metadatas):
+            cid = meta.get("chunk_id")
+            if cid in id_set:
+                results.append({
+                    "chunk_id": cid,
+                    "text": t,
+                    "source": meta.get("source", ""),
+                    "metadata": meta,
+                })
+        return results
+
 
 # ---------------------------------------------------------------------------
 # Pinecone backend  (uncomment when switching)

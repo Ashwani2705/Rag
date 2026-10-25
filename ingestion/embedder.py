@@ -59,7 +59,7 @@ class GoogleGenAIEmbedder(BaseEmbedder):
 
     def __init__(self):
         from google import genai
-        api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
+        api_key = os.environ.get("gemini_api_key") 
         if not api_key:
             raise ValueError("GOOGLE_API_KEY or GEMINI_API_KEY must be set in environment.")
         
@@ -201,5 +201,5 @@ def embed_and_store_chunks(chunks) -> tuple[list, list[list[float]]]:
     store.add_documents(texts, metadatas, embeddings)
     store.persist()
 
-    print(f"  [embedder] ✓ {len(chunks)} chunks stored.")
+    print(f"  [embedder] [OK] {len(chunks)} chunks stored.")
     return chunks, embeddings

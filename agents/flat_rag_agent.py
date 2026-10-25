@@ -42,7 +42,7 @@ Confidence: <high | medium | low>
 
 flat_rag_agent = Agent(
     name="flat_rag_agent",
-    model=os.environ.get("AGENT_MODEL", "gemini-1.5-flash"),
+    model=os.environ.get("AGENT_MODEL", "gemini-2.5-flash"),
     description=(
         "Retrieves answers using vector similarity search (FAISS/Pinecone). "
         "Best for factual, definitional, and single-concept queries with no "

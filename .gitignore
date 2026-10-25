@@ -2,3 +2,7 @@
 .adk
 __pycache__
 venv
+faiss_index
+agents/run.txt
+D:\Rag+Graph\architecture-plan.md
+cache

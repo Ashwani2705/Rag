@@ -25,7 +25,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# ── Colour helpers (no deps) ─────────────────────────────────────────────────
+# -- Colour helpers (no deps) -------------------------------------------------
 RESET = "\033[0m"
 BOLD  = "\033[1m"
 BLUE  = "\033[34m"
@@ -50,7 +50,7 @@ def _print_response(query: str, response) -> None:
     conf_col  = GREEN if response.confidence.value == "high" else YELL if response.confidence.value == "medium" else RED
 
     print()
-    print(_c("─" * 60, GREY))
+    print(_c("-" * 60, GREY))
     print(_c(f"  Mode       : {mode}", mode_col))
     print(_c(f"  Confidence : {response.confidence.value}", conf_col))
     if response.graph_path and response.graph_path.lower() != "none":
@@ -59,7 +59,7 @@ def _print_response(query: str, response) -> None:
         print(_c(f"  High-conf  : {', '.join(response.high_conf_ids)}", GREEN))
     if response.sources:
         print(_c(f"  Sources    : {', '.join(response.sources)}", GREY))
-    print(_c("─" * 60, GREY))
+    print(_c("-" * 60, GREY))
     print()
     print(_c(f"Q: {query}", BOLD))
     print()
@@ -67,7 +67,7 @@ def _print_response(query: str, response) -> None:
     print()
 
 
-# ── Golden test queries ───────────────────────────────────────────────────────
+# -- Golden test queries -------------------------------------------------------
 GOLDEN_QUERIES = [
     # Group A — Flat RAG expected
     ("What is FAISS?",                          "flat_rag"),
@@ -151,26 +151,26 @@ async def run_compare(user_id: str) -> None:
 
     print(_c("\n=== Golden Query Comparison ===\n", BOLD))
     print(f"{'Query':<52} {'Expected':<12} {'Actual':<12} {'Match'}")
-    print("─" * 90)
+    print("-" * 90)
 
     correct = 0
     for query, expected in GOLDEN_QUERIES:
         try:
             response = await runner.run(query, user_id=user_id)
             actual   = response.retrieval_mode.value
-            match    = "✓" if actual == expected else "✗"
+            match    = "[OK]" if actual == expected else "[X]"
             if actual == expected:
                 correct += 1
-            col = GREEN if match == "✓" else RED
+            col = GREEN if match == "[OK]" else RED
             print(_c(f"{query[:50]:<52} {expected:<12} {actual:<12} {match}", col))
         except Exception as e:
-            print(_c(f"{query[:50]:<52} {expected:<12} ERROR        ✗  ({e})", RED))
+            print(_c(f"{query[:50]:<52} {expected:<12} ERROR        [X]  ({e})", RED))
 
-    print("─" * 90)
+    print("-" * 90)
     print(_c(f"\nRouting accuracy: {correct}/{len(GOLDEN_QUERIES)} ({100*correct//len(GOLDEN_QUERIES)}%)\n", BOLD))
 
 
-# ── Entrypoint ───────────────────────────────────────────────────────────────
+# -- Entrypoint ---------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description="RAG + GraphRAG agent CLI")
